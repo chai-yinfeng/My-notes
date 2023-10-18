@@ -1,5 +1,7 @@
 # 第1章 绪论
 
+参考课程链接：【【吃瓜教程】《机器学习公式详解》（南瓜书）与西瓜书公式推导直播合集】 https://www.bilibili.com/video/BV1Mh411e7VU/?p=2&share_source=copy_web&vd_source=c22abe8e67e193936015d5ca043a8148
+
 # 1.1 引言
 
 ## 机器学习的概念
