@@ -10,10 +10,10 @@ y=w_{1} x_{1}+w_{2} x_{2}+...+w_{n} x_{n}+b
 $$
 其中：
 
-- *y* 是预测值。
-- *x*1,*x*2,...,*xn* 是输入特征。
-- *w*1,*w*2,...,*wn* 是模型的权重。
-- *b* 是偏置项。
+- $y$ 是预测值。
+- $x_1,x_2,...,x_n$是输入特征。
+- $w_1,w_2,...,w_n$是模型的权重。
+- $b$ 是偏置项。
 
 以下是线性模型的一些常见类型：
 
@@ -38,10 +38,10 @@ y=wx+b
 $$
 其中：
 
-- *y* 是预测值
-- *x* 是输入特征
-- *w* 是权重（也称为斜率）
-- *b* 是偏置（也称为截距）
+- $y$ 是预测值
+- $x$ 是输入特征
+- $w$ 是权重（也称为斜率）
+- $b$ 是偏置（也称为截距）
 
 ### ！！公式推导！！
 
@@ -64,29 +64,29 @@ $$
 $$
 y=wx+b+\epsilon
 $$
-其中 ϵ 为不受控制的随机误差，通常假设其服从均值为0的正态分布 ϵ*∼*N*(0,*σ*2) ，所以 ϵ 的概率密度函数为：
+其中 ϵ 为不受控制的随机误差，通常假设其服从均值为0的正态分布 $\epsilon∼N(0,σ^2) $，所以 $\epsilon$ 的概率密度函数为：
 $$
 p(\epsilon)=\frac{1}{\sqrt{2\pi}\sigma}\exp(-\frac{\epsilon^2}{2\sigma^2})
 $$
-若将 ϵ 用 y - ( wx + b ) 等价替换可得：
+若将 $\epsilon $ 用 $ y-(wx+b) $ 等价替换可得：
 $$
 p(\epsilon)=\frac{1}{\sqrt{2\pi}\sigma}\exp(-\frac{(y-(wx+b))^2}{2\sigma^2})
 $$
-上式显然可以看做 y*∼*N*(wx+b,*σ*2)，下面便可以用极大似然估计来估计w和b的值，似然函数为：
+上式显然可以看做 $y∼N(wx+b,σ^2)$，下面便可以用极大似然估计来估计w和b的值，似然函数为：
 $$
 L(w,b)=\prod_{i=1}^mp(y_i)=\prod_{i=1}^m\frac{1}{\sqrt{2\pi}\sigma}\exp(-\frac{(y_i-(wx_i+b))^2}{2\sigma^2})\\
 \ln L(w,b)=\sum_{i=1}^m\ln\frac{1}{\sqrt{2\pi}\sigma}\exp(-\frac{(y_i-wx_i-b)^2}{2\sigma^2})\\
 =\sum_{i=1}^m\ln\frac{1}{\sqrt{2\pi}\sigma}+\sum_{i=1}^m\ln \exp(-\frac{(y_i-wx_i-b)^2}{2\sigma^2})\\
 =m\ln\frac{1}{\sqrt{2\pi}\sigma}-\frac{1}{2\sigma^2}\sum_{i=1}^m(y_i-wx_i-b)^2
 $$
-其中 m,σ 均为常数
+其中 $m,σ$ 均为常数
 $$
 所以最大化\ln L(w,b)等价于最小化\sum_{i=1}^m(y_i-wx_i-b)^2,也即\\
 (w^*,b^*)=arg \max_{(w,b)}\ln L(w,b)=arg\min_{(w,b)}\sum_{i=1}^m(y_i-wx_i-b)^2
 $$
 等价于最小二乘估计。
 
-将均方误差分别对w和b求导可以得到：
+将均方误差分别对$w$和$b$求导可以得到：
 $$
 \frac{\partial E_{(w,b)}}{\partial w}=2(w\sum_{i=1}^mx_i^2-\sum_{i=1}^m(y_i-b)x_i)\\
 \frac{\partial E_{(w,b)}}{\partial b}=2(mb-\sum_{i=1}^m(y_i-wx_i))
@@ -354,10 +354,24 @@ y_1-\hat{\boldsymbol w}^T\hat{\boldsymbol x_1} & y_2-\hat{\boldsymbol w}^T\hat{\
  \\y_m-\hat{\boldsymbol w}^T\hat{\boldsymbol x_m}
 \end{pmatrix}=(\boldsymbol y-\boldsymbol X\hat{\boldsymbol w})^T(\boldsymbol y-\boldsymbol X\hat{\boldsymbol w})
 $$
-
-
-
-
+对 $\hat w$ 求导可得
+$$
+\frac{\partial E_{\hat{\boldsymbol w}}}{\partial \hat{\boldsymbol w}}=2\boldsymbol X^T(\boldsymbol X\hat{\boldsymbol w}-\boldsymbol y)
+$$
+推导过程如下：
+$$
+将E_{\hat{\boldsymbol w}}=(\boldsymbol y-\boldsymbol X\hat{\boldsymbol w})^T(\boldsymbol y-\boldsymbol X\hat{\boldsymbol w})展开可得\\
+E_{\hat{\boldsymbol w}}=\boldsymbol y^T \boldsymbol y-\boldsymbol y^T \boldsymbol X \hat{\boldsymbol w}-\hat{\boldsymbol w}\boldsymbol X^T\boldsymbol y+\hat{\boldsymbol w}^T\boldsymbol X^T\boldsymbol X\hat{\boldsymbol w}\\
+对\hat{\boldsymbol w}求导可得\\
+\frac{\partial E_{\hat{\boldsymbol w}}}{\partial \boldsymbol w}=\frac{\partial \boldsymbol y^T \boldsymbol y}{\partial \boldsymbol w}-\frac{\partial \boldsymbol{y^T X \hat w}}{\partial \boldsymbol w}-\frac{\partial \boldsymbol {\hat w^T X^T y}}{\partial \boldsymbol w}+\frac{\partial \boldsymbol {\hat w^T X^T X \hat w}}{\partial \boldsymbol w}\\
+根据矩阵微分公式\frac{\partial \boldsymbol {x^T a}}{\partial \boldsymbol x}=\frac{\partial \boldsymbol {a^T x}}{\partial \boldsymbol x}=\boldsymbol a,\frac{\partial \boldsymbol {x^T A x}}{\partial \boldsymbol x}=(\boldsymbol A + \boldsymbol A^T) \boldsymbol x可得\\
+\frac{\partial E_{\hat{\boldsymbol w}}}{\partial \boldsymbol w}=0-\boldsymbol {X^Ty}-\boldsymbol{X^Ty}+\boldsymbol{(X^TX+X^TX)}\hat{\boldsymbol w}\\
+=2\boldsymbol{X^T(X\hat w-y)}\\
+令\frac{\partial E_{\hat{\boldsymbol w}}}{\partial \boldsymbol w}=2\boldsymbol{X^T(X\hat w-y)}=0\\
+2\boldsymbol{X^TX\hat w}-2\boldsymbol{X^T y}=0\\
+2\boldsymbol{X^TX\hat w}=2\boldsymbol{X^T y}\\
+\boldsymbol{\hat w}=\boldsymbol{(X^TX)^{-1}X^Ty}
+$$
 
 
 
@@ -560,25 +574,22 @@ SMOTE（Synthetic Minority Over-sampling Technique）是一个广泛使用的过
      x_{neighbor}
      $$
      
-
    - 对每个特征，计算差值：
      $$
      difference=x_{neighbor}-x
      $$
      
-
    - 乘以一个介于0到1之间的随机数：
      $$
      gap=randomnumber()*difference
      $$
      
-
    - 生成合成样本：
      $$
      x_{new}=x+gap
      $$
      
-
+   
 4. **重复步骤**：根据需要的合成样本数量，重复上述过程。
 
 这种方法的主要优点是它可以生成在原始特征空间中与真实数据相似但并非完全相同的样本，从而增加了少数类别的多样性，减少了模型过拟合的风险。
