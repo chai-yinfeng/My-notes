@@ -248,8 +248,120 @@ $$
 更一般的情形是数据集D=\{(\boldsymbol x_1,y_1),(\boldsymbol x_2,y_2),...,(\boldsymbol x_m,y_m)\},\\
 其中\boldsymbol x_i=(x_{i1};x_{i2};...;x_{id}),y_i\in\mathbb R,样本由d个属性描述.
 此时我们试图学得\\
-f(\boldsymbol x_i)=\boldsymbol w^T\boldsymbol x_i+b,使得f(\boldsymbol x_i)\simeq y_i
+f(\boldsymbol x_i)=\boldsymbol w^T\boldsymbol x_i+b,使得f(\boldsymbol x_i)\simeq y_i\\
+f(\boldsymbol x_i)=
+\begin{pmatrix}
+w_1 & w_2 & ... & w_d
+\end{pmatrix}
+\begin{pmatrix}
+ x_{i1}
+ \\x_{i2}
+ \\...
+ \\x_{id}
+\end{pmatrix}+b\\
+f(\boldsymbol x_i)=w_1x_{i1}+w_2x_{i2}+...+w_dx_{id}+b\\
+f(\boldsymbol x_i)=w_1x_{i1}+w_2x_{i2}+...+w_dx_{id}+w_{d+1}·1\\
+f(\boldsymbol x_i)=
+\begin{pmatrix}
+w_1 & w_2 & ... & w_d & w_{d+1}
+\end{pmatrix}
+\begin{pmatrix}
+ x_{i1}
+ \\x_{i2}
+ \\...
+ \\x_{id}
+ \\1
+\end{pmatrix}\\
+所以可得新的表示:f(\hat{\boldsymbol x_i} )=\hat{\boldsymbol w}^T\hat{\boldsymbol x_i}
 $$
+由最小二乘法可得：
+$$
+E_{\hat w}=\sum_{i=1}^m(y_i-f(\hat{\boldsymbol x_i}))^2=\sum_{i=1}^m(y_i-\hat{\boldsymbol w}^T\hat{\boldsymbol x_i})^2
+$$
+下面将其向量化以得到同西瓜书完全一致的形式：
+$$
+E_{\hat w}=\sum_{i=1}^m(y_i-\hat{\boldsymbol w}^T\hat{\boldsymbol x_i})^2=(y_1-\hat{\boldsymbol w}^T\hat{\boldsymbol x_1})^2+(y_2-\hat{\boldsymbol w}^T\hat{\boldsymbol x_2})^2+...+(y_m-\hat{\boldsymbol w}^T\hat{\boldsymbol x_m})^2\\
+E_{\hat w}=
+\begin{pmatrix}
+y_1-\hat{\boldsymbol w}^T\hat{\boldsymbol x_1} & y_2-\hat{\boldsymbol w}^T\hat{\boldsymbol x_2} & ... & y_m-\hat{\boldsymbol w}^T \hat{\boldsymbol x_m}
+\end{pmatrix}
+\begin{pmatrix}
+ y_1-\hat{\boldsymbol w}^T\hat{\boldsymbol x_1}
+ \\y_2-\hat{\boldsymbol w}^T\hat{\boldsymbol x_2}
+ \\...
+ \\y_m-\hat{\boldsymbol w}^T\hat{\boldsymbol x_m}
+\end{pmatrix}\\
+其中\begin{pmatrix}
+ y_1-\hat{\boldsymbol w}^T\hat{\boldsymbol x_1}
+ \\y_2-\hat{\boldsymbol w}^T\hat{\boldsymbol x_2}
+ \\...
+ \\y_m-\hat{\boldsymbol w}^T\hat{\boldsymbol x_m}
+\end{pmatrix}=\begin{pmatrix}
+ y_1
+ \\y_2
+ \\...
+ \\y_m
+\end{pmatrix}-\begin{pmatrix}
+ \hat{\boldsymbol w}^T\hat{\boldsymbol x_1}
+ \\\hat{\boldsymbol w}^T\hat{\boldsymbol x_2}
+ \\...
+ \\\hat{\boldsymbol w}^T\hat{\boldsymbol x_m}
+\end{pmatrix}=\begin{pmatrix}
+ y_1
+ \\y_2
+ \\...
+ \\y_m
+\end{pmatrix}-\begin{pmatrix}
+ \hat{\boldsymbol x_1}^T\hat{\boldsymbol w}
+ \\\hat{\boldsymbol x_2}^T\hat{\boldsymbol w}
+ \\...
+ \\\hat{\boldsymbol x_m}^T\hat{\boldsymbol w}
+\end{pmatrix}\\
+\boldsymbol y=\begin{pmatrix}
+ y_1
+ \\y_2
+ \\...
+ \\y_m
+\end{pmatrix},\begin{pmatrix}
+ \hat{\boldsymbol x_1}^T\hat{\boldsymbol w}
+ \\\hat{\boldsymbol x_2}^T\hat{\boldsymbol w}
+ \\...
+ \\\hat{\boldsymbol x_m}^T\hat{\boldsymbol w}
+\end{pmatrix}=\begin{pmatrix}
+ \hat{\boldsymbol x_1}^T
+ \\\hat{\boldsymbol x_2}^T
+ \\...
+ \\\hat{\boldsymbol x_m}^T
+\end{pmatrix}·\hat{\boldsymbol w}=\begin{pmatrix}
+ \boldsymbol x_1^T & 1
+ \\\boldsymbol x_2^T & 1
+ \\...&...
+ \\\boldsymbol x_m^T & 1
+\end{pmatrix}·\hat{\boldsymbol w}=\boldsymbol X·\hat{\boldsymbol w}\\
+所以有:\begin{pmatrix}
+ y_1-\hat{\boldsymbol w}^T\hat{\boldsymbol x_1}
+ \\y_2-\hat{\boldsymbol w}^T\hat{\boldsymbol x_2}
+ \\...
+ \\y_m-\hat{\boldsymbol w}^T\hat{\boldsymbol x_m}
+\end{pmatrix}=\boldsymbol y-\boldsymbol X \hat{\boldsymbol w}\\
+E_{\hat{\boldsymbol w}}=\begin{pmatrix}
+y_1-\hat{\boldsymbol w}^T\hat{\boldsymbol x_1} & y_2-\hat{\boldsymbol w}^T\hat{\boldsymbol x_2} & ... & y_m-\hat{\boldsymbol w}^T \hat{\boldsymbol x_m}
+\end{pmatrix}
+\begin{pmatrix}
+ y_1-\hat{\boldsymbol w}^T\hat{\boldsymbol x_1}
+ \\y_2-\hat{\boldsymbol w}^T\hat{\boldsymbol x_2}
+ \\...
+ \\y_m-\hat{\boldsymbol w}^T\hat{\boldsymbol x_m}
+\end{pmatrix}=(\boldsymbol y-\boldsymbol X\hat{\boldsymbol w})^T(\boldsymbol y-\boldsymbol X\hat{\boldsymbol w})
+$$
+
+
+
+
+
+
+
+
 
 
 ### 1. 定义
