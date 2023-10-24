@@ -354,9 +354,17 @@ y_1-\hat{\boldsymbol w}^T\hat{\boldsymbol x_1} & y_2-\hat{\boldsymbol w}^T\hat{\
  \\y_m-\hat{\boldsymbol w}^T\hat{\boldsymbol x_m}
 \end{pmatrix}=(\boldsymbol y-\boldsymbol X\hat{\boldsymbol w})^T(\boldsymbol y-\boldsymbol X\hat{\boldsymbol w})
 $$
-对 $\hat w$ 求导可得
+对 $\hat{\boldsymbol{w}}$ 求导可得
 $$
 \frac{\partial E_{\hat{\boldsymbol w}}}{\partial \hat{\boldsymbol w}}=2\boldsymbol X^T(\boldsymbol X\hat{\boldsymbol w}-\boldsymbol y)
+$$
+令$\frac{\partial E_{\hat{\boldsymbol w}}}{\partial \boldsymbol w}=2\boldsymbol{X^T(X\hat w-y)}=0$可求得
+$$
+\hat{\boldsymbol w}^*=\boldsymbol {(X^TX)^{-1}X^Ty}
+$$
+其中$\boldsymbol{(X^TX)^{-1}}$是矩阵$\boldsymbol{(X^TX)}$的逆矩阵，令$\hat{\boldsymbol{x_i}}=(\boldsymbol x_i;1)$，则最终学得的多元线性回归模型为
+$$
+f(\hat{\boldsymbol x_i})=\boldsymbol{\hat x_i^T(X^TX)^{-1}X^Ty}
 $$
 推导过程如下：
 $$
@@ -373,10 +381,7 @@ E_{\hat{\boldsymbol w}}=\boldsymbol y^T \boldsymbol y-\boldsymbol y^T \boldsymbo
 \boldsymbol{\hat w}=\boldsymbol{(X^TX)^{-1}X^Ty}
 $$
 
-
-
-
-
+现实任务中$\boldsymbol{(X^TX)}$往往不是满秩矩阵，例如在许多任务中我们会遇到大量的变量，其数目甚至超过样例数，导致$\boldsymbol X$的列数多于行数，$\boldsymbol{(X^TX)}$显然不满秩。此时可解出多个$\hat{\boldsymbol w}$，它们都能使均方误差最小化。选择哪一个解作为输出，将由学习算法的归纳偏好决定，常见的做法是引入正则化（regularization）项。
 
 ### 1. 定义
 
@@ -428,6 +433,46 @@ $$
 # 3.3 对数几率回归
 
 参考课程链接：【【吃瓜教程】《机器学习公式详解》（南瓜书）与西瓜书公式推导直播合集】 https://www.bilibili.com/video/BV1Mh411e7VU/?p=5&share_source=copy_web&vd_source=c22abe8e67e193936015d5ca043a8148
+
+## ！！公式推导！！
+
+已知离散型随机变量$y\in\{0,1\}$取值为1和0的概率分别建模为：
+$$
+p(y=1|\boldsymbol x)=\frac{1}{1+e^{-(\boldsymbol{w^Tx}+b)}}=\frac{e^{\boldsymbol{w^Tx}+b}}{1+e^{\boldsymbol{w^Tx}+b}}\\
+p(y=0|\boldsymbol x)=1-p(y=1|\boldsymbol x)=\frac{1}{1+e^{\boldsymbol{w^Tx}+b}}
+$$
+令$\beta=(\boldsymbol w;b),\hat{\boldsymbol x}=(\boldsymbol x;1)$，则上式可简写为：
+$$
+p(y=1|\boldsymbol{\hat x;\beta })=\frac{e^{\boldsymbol{\beta^T \hat x}}}{1+e^{\boldsymbol{\beta^T \hat x}}}=p_1(\boldsymbol{\hat x;\beta })\\
+p(y=0|\boldsymbol{\hat x;\beta })=\frac{1}{1+e^{\boldsymbol{\beta^T \hat x}}}=p_0(\boldsymbol{\hat x;\beta })
+$$
+由以上概率取值可推得随机变量$y\in\{0,1\}$的概率质量函数为
+$$
+p(y|\boldsymbol{\hat x;\beta })=y·p_1(\boldsymbol{\hat x;\beta })+(1-y)·p_0(\boldsymbol{\hat x;\beta })
+$$
+接下来写出似然函数以及对数似然函数
+$$
+L(\beta)=\prod_{i=1}^{m}p(y_i|\boldsymbol{\hat x_i;\beta })\\
+l(\beta)=\ln L(\beta)=\sum_{i=1}^{m}\ln p(y_i|\boldsymbol{\hat x_i;\beta })\\
+l(\beta)=\sum_{i=1}^{m}\ln (y_i·p_1(\boldsymbol{\hat x_i;\beta })+(1-y_i)·p_0(\boldsymbol{\hat x_i;\beta }))\\
+l(\beta)=\sum_{i=1}^{m}\ln (\frac{y_i·e^{\boldsymbol{\beta^T \hat x_i}}}{1+e^{\boldsymbol{\beta^T \hat x_i}}}+\frac{1-y_i}{1+e^{\boldsymbol{\beta^T \hat x_i}}})\\
+=\sum_{i=1}^{m}\ln (\frac{y_i·e^{\boldsymbol{\beta^T \hat x_i}}+1-y_i}{1+e^{\boldsymbol{\beta^T \hat x_i}}})\\
+=\sum_{i=1}^{m}(\ln(y_i·e^{\boldsymbol{\beta^T \hat x_i}}+1-y_i)-\ln(1+e^{\boldsymbol{\beta^T \hat x_i}}))
+$$
+由于$y\in\{0,1\}$，则
+$$
+l(\beta)=\left\{\begin{matrix}
+\sum_{i=1}^m(-\ln(1+e^{\boldsymbol{\beta^T \hat x_i}})), & y_i=0
+ \\\sum_{i=1}^{m}(\boldsymbol{\beta^T \hat x_i}-\ln(1+e^{\boldsymbol{\beta^T \hat x_i}})), & y_i=1
+\end{matrix}\right.
+$$
+综合两式可得
+$$
+l(\beta)=\sum_{i=1}^m(y_i\boldsymbol{\beta^T \hat x_i}-\ln(1+e^{\boldsymbol{\beta^T \hat x_i}}))
+$$
+由于损失函数通常是以最小化为优化目标，因此可以将最大化$l(\beta)$等价转化为最小化$-l(\beta)$，可得书上公式。
+
+南瓜书课程链接视频中还提供了从信息论的角度推导得到相同表达式的思路和过程，详情查看视频。
 
 对数几率回归，通常称为**逻辑回归**（Logistic Regression），是统计学和机器学习中的一种分类方法。尽管其名称中含有“回归”，但逻辑回归主要用于二分类问题（也可以扩展到多分类问题）。其基本思想是将线性回归的输出通过某种方法（如 Sigmoid 函数）映射到[0,1]区间，以得到某事件发生的概率。
 
